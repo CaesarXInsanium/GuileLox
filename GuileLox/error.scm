@@ -1,16 +1,20 @@
+;; This bullshit has to match diretory name and filename
+(define-module (GuileLox error))
 
-(define lox-error? #f)
-(define (lox-error line message)
+(define-public lox-error? #f)
+
+(define-public (lox-error line message)
   (report line "" message))
-(define (report line where message)
-  (let ((err (current-error-port)))
-    (begin (display "[line " err)
-           (display line err)
-           (display "] Error" err)
-           (display where err)
-           (display ": " err)
-           (display message err)
-           (define lox-error? #t)
+
+(define-public (report line where message)
+  (let ((stderr (current-error-port)))
+    (begin (display "[line " stderr)
+           (display line stderr)
+           (display "] Error" stderr)
+           (display where stderr)
+           (display ": " stderr)
+           (display message stderr)
+           (set! lox-error? #t)
            (if lox-error?
                -1
                0))))
