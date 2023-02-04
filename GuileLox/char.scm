@@ -9,7 +9,9 @@
       (char=? char #\_)))
 
 (define-public (digit? char)
-  (and (char>=? char #\0) (char<=? char #\0)))
+  (and (char>=? char #\0) (char<=? char #\9)))
 
 (define-public (alpha-numberic? char)
   (or (alpha? char) (digit? char)))
+
+(define-public (quote-mark? char) (or (char=? #\" char) (char=? #\' char)))

@@ -85,4 +85,5 @@
                                                     (scan-token)
                                                     (append! TOKENS (make-token TOKEN-EOF "" '() LINE))
                                                     (loop))))
-         (loop)))
+         (loop)
+         TOKENS))

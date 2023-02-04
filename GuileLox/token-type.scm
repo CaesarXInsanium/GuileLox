@@ -1,4 +1,5 @@
 (define-module (GuileLox token-type))
+(use-modules (GuileLox char))
 
 (define-public TOKEN-LEFT-PAREN 0)
 (define-public TOKEN-RIGHT-PAREN 1)
@@ -47,3 +48,17 @@
 (define-public TOKEN-EOF 38)
 (define-public TOKEN-ERROR -1)
 
+(define (char-single-token char)
+  (cond ((char=? char #\() TOKEN-LEFT-PAREN)
+        ((char=? char #\)) TOKEN-RIGHT-PAREN)
+        ((char=? char #\{) TOKEN-LEFT-BRACE)
+        ((char=? char #\}) TOKEN-RIGHT-BRACE)
+        ((char=? char #\,) TOKEN-COMMA)
+        ((char=? char #\.) TOKEN-DOT)
+        ((char=? char #\-) TOKEN-MINUS)
+        ((char=? char #\+) TOKEN-PLUS)
+        ((char=? char #\;) TOKEN-SEMICOLON)
+        ((char=? char #\*) TOKEN-STAR)
+        (else TOKEN-ERROR)))
+
+(define-public (char-single-token? char) (not (= -1 (char-single-token char))))
