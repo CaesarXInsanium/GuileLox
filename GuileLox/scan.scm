@@ -3,25 +3,56 @@
 (use-modules (GuileLox token))
 (use-modules (GuileLox token-type))
 
-
-(define (inc x) (+ x 1))
+(define (inc x) (+ 1 x))
 (define (dec x) (- x 1))
-(define LINE 1)
 
-(define (scan-string source)
-  (if (char=? #\" (string-ref source 0))
-      #\"
-      (string)))
+(define (scanner source)
+  (begin (define tokens (make-list 1 #f))
+         (define line 0)
+         (define start 0)
+         (define current 0)
+         (define (peek)
+           (if (at-end?) #\nul (string-ref source current)))
+         (define (peek-next) 
+           (if (>= (inc current) (string-length source)
+                   #\nul
+                   (string-ref source (inc current)))))
+         
+         (define (identifier)
+           (define (loop)
+             (if (alpha-numberic? (peek))
+                 (begin (advance)
+                        (loop))))
+           (loop)
+           (let ((text (substring source start current)))
+             (add-token! (keyword->token-type text) text #f line)))
+         
+         
+         (define (add-token!! type obj) 
+           (list-append tokens (make-token type (substring start current) obj line)))
 
+         (define (add-tokenn! type)
+           (add-token!! type '()))
 
-;; here we are dealing with the assumption that the first item in is the char we are focusing on
-(define (scan source start line len)
-  (let ((char (string-ref source start)))
-    (cond ((char-single-token? char) (cons (make-token (char-single-token char) char #f line) 
-                                           (scan (substring source (inc start)) (dec len))))
-          ((quote-mark? char) (cons (make-token TOKEN-STRING char #f line) (scan (substring source (inc start)) line len)))
-          (else (cons (make-token TOKEN-ERROR (string-ref source start) #f line) '())))))
+         (define (at-end?) (>= current (string-length source)))
 
-(define-public (scan-tokens source)
-  (let ((len (string-length source)))
-    (scan source 0 1 len)))
+         (define (match expected)
+           (if (at-end?)
+               #f
+               (if (not (char=? (string-ref source current) expected))
+                   #f
+                   (begin (set! current (inc current))
+                          #t))))
+         (define (advance)
+           (begin (set! current (inc current))
+                  (string-ref source (dec current))))
+         (define (scan-token) (let ((c (advance)))))
+         (define (scan-tokens)
+           (define (loop) 
+             (if (not (at-end?)) 
+                 (begin (set! start current)
+                        (scan-token)
+                        (loop))))
+           (loop)
+           (list-append tokens (make-token TOKEN-EOF "" '() line))
+           tokens)))

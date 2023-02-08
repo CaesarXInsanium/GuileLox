@@ -1,0 +1,3 @@
+#! /bin/sh
+export GUILE_LOAD_PATH=$(pwd)
+./glox.scm $@
