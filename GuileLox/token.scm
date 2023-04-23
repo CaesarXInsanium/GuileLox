@@ -2,8 +2,11 @@
 ;; allows for defining records
 
 (use-modules (srfi srfi-9))
-;; allows for defining custome printer
+;; allows for defining custom printer
 (use-modules (srfi srfi-9 gnu))
+(use-modules (ice-9 format))
+
+(use-modules (GuileLox token-type))
 
 (define-record-type token
   (make-token type lexeme object line)
@@ -13,17 +16,14 @@
   (object token-object)
   (line token-line))
 
+
 (set-record-type-printer! token (lambda (record port)
-                                  (display "Token\t")
-                                  (display "Type: ")
-                                  (display (token-type record))
-                                  (display " Lexeme: ")
-                                  (display (token-lexeme record))
-                                  (display " Object: ")
-                                  (display (token-object record))
-                                  (display " LineNum: ")
-                                  (display (token-line record))
-                                  (newline)))
+                                  (display (format #f "Token { type: ~s,\tlexeme: ~s,\tobject: ~:a,\tline: ~d }~%"
+                                                   (tokentype->string (token-type record))
+                                                   (token-lexeme record)
+                                                   (token-object record)
+                                                   (token-line record))
+                                           port)))
 
 (define-public nil '())
 

@@ -15,6 +15,8 @@
                           (char=? char #\newline)
                           (char=? char #\tab)))))
 
+;; TODO: implement EOF token type, string parser, comment parser, line counter
+
 (define-public (scan-tokens port)
   (let ((char (lookahead-char port)))
     (if (eof-object? char)
@@ -38,7 +40,7 @@
                                                  (scan-tokens port))))
               ((whitespace? char) (let ((char (get-char port)))
                                     (scan-tokens port)))
-              (else (error (format #f "Error with: ~a\n" char)))))))
+              (else (error (format #f "Error with: ~a ~%" char)))))))
 
 
 (define-public (scan-alpha port)
