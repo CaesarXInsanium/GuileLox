@@ -11,7 +11,7 @@
 (use-modules (GuileLox token))
 (use-modules (GuileLox token-type))
 (use-modules (GuileLox scanner))
-(use-modules (GuileLox scan))
+;; (use-modules (GuileLox scan))
 
 ;; Represents STDIN when promptin user for input, this is a Guile Port
 (define STDIN (current-input-port))
@@ -24,16 +24,8 @@
   (display "Executing: \n")
   (display source)
   (newline)
-  (display (scanner source))
-  (newline)
-  (display "Other Attempt\n")
-  (let ((r (scan-tokens source))
-        (l (string-length source)))
-    (begin (display "Source Length: ")
-           (display l)
-           (newline)
-           (display r)
-           (newline))))
+  (display (scan-tokens (open-input-string source)))
+  (newline))
 
 (define (run-file path)
   (let ((fileport (open-file path "r")))

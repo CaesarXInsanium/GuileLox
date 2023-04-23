@@ -14,7 +14,7 @@
   (line token-line))
 
 (set-record-type-printer! token (lambda (record port)
-                                  (display "Token->")
+                                  (display "Token\t")
                                   (display "Type: ")
                                   (display (token-type record))
                                   (display " Lexeme: ")
@@ -24,6 +24,8 @@
                                   (display " LineNum: ")
                                   (display (token-line record))
                                   (newline)))
+
+(define-public nil '())
 
 (export make-token
         token?

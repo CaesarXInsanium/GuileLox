@@ -48,7 +48,7 @@
 (define-public TOKEN_EOF 38)
 (define-public TOKEN_ERROR -1)
 
-(define (char-single-token char)
+(define-public (char-single-token char)
   (cond ((char=? char #\() TOKEN_LEFT-PAREN)
         ((char=? char #\)) TOKEN_RIGHT-PAREN)
         ((char=? char #\{) TOKEN_LEFT-BRACE)
@@ -61,7 +61,7 @@
         ((char=? char #\*) TOKEN_STAR)
         (else TOKEN_ERROR)))
 
-(define (keyword->token-type str)
+(define-public (keyword->token-type str)
   (cond ((string=? "and" str) TOKEN_AND)
         ((string=? "class" str) TOKEN_CLASS)
         ((string=? "else" str) TOKEN_ELSE)
@@ -81,3 +81,25 @@
         (else TOKEN_IDENTIFIER)))
 
 (define-public (char-single-token? char) (not (= -1 (char-single-token char))))
+
+(define-public (char-double-token? char)
+  (or (char=? char #\!) 
+      (char=? char #\=)
+      (char=? char #\<)
+      (char=? char #\>)
+      (char=? char #\/)))
+
+(define-public (match-double-token first second)
+  (cond ((char=? first #\!)
+         (cond ((char=? second #\=) TOKEN_BANG-EQUAL)
+               (else TOKEN_BANG)))
+        ((char=? first #\=) 
+         (cond ((char=? second #\=) TOKEN_EQUAL-EQUAL)
+               (else TOKEN_EQUAL)))
+        ((char=? first #\>)
+         (cond ((char=? second #\=) TOKEN_GREATER-EQUAL)
+               (else TOKEN_GREATER)))
+        ((char=? first #\<)
+         (cond ((char=? second #\=) TOKEN_LESS-EQUAL)
+               (else TOKEN_LESS)))
+        ((char=? first #\/) (error "Need to implement comment parsing"))))
