@@ -16,11 +16,14 @@
                           (char=? char #\tab)))))
 
 ;; TODO: implement EOF token type, string parser, comment parser, line counter
-
+;; treats string source as a port, with a seperate internal state
+;; state of the scanner in implemented using seperate functions used to for
+;; switching between scanning strings, numbers and other tokens
 (define-public (scan-tokens port)
   (let ((char (lookahead-char port)))
     (if (eof-object? char)
-        nil
+        (cons (make-token TOKEN_EOF (list->string (list #\0)) nil 0)
+              nil)
         (cond ((alpha? char) (let ((word (list->string (scan-alpha port))))
                                (cons (make-token (keyword->token-type word) 
                                                  word nil 0)
@@ -53,9 +56,11 @@
 (define-public (scan-number port)
   (cons (get-char port)
         (let ((char (lookahead-char port)))
-          (if (digit? char)
-              (scan-number port)
-              nil))))
+          (if (eof-object? char)
+              nil
+              (if (digit? char)
+                  (scan-number port)
+                  nil)))))
 
 (define-public (scan-double-token port)
   (define first (get-char port))

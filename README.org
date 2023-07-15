@@ -1,0 +1,9 @@
+* Guile Implementation of Crafting Interpreters
+
+This repo contains my WIP implementation of the Lox language in the GNU Guile
+implementation of the Scheme programming language.
+
+** Resources
+
+- GNU Guile Manual
+- Crafting Interpreters by 

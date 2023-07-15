@@ -24,6 +24,7 @@
   (display "Executing: \n")
   (display source)
   (newline)
+  ;; open-input-string is a function that turns a string into a port
   (display (scan-tokens (open-input-string source)))
   (newline))
 
